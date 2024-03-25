@@ -1,0 +1,82 @@
+﻿@page
+@model POS.Pages.AddItem.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Item</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="item-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input id="item-id" type="hidden" asp-for="Item.ItemId" />
+            <input id="item-createdDate" type="hidden" asp-for="Item.CreatedDate" />
+            <div class="form-group">
+                <label asp-for="Item.ItemName" class="control-label"></label>
+                <input asp-for="Item.ItemName" id="item-name" class="form-control" />
+                <span asp-validation-for="Item.ItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.ItemQty" class="control-label"></label>
+                <input asp-for="Item.ItemQty" id="item-qty" class="form-control" />
+                <span asp-validation-for="Item.ItemQty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.ItemPrice" class="control-label"></label>
+                <input asp-for="Item.ItemPrice" id="item-price" class="form-control" />
+                <span asp-validation-for="Item.ItemPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input id="Click_1" type="button" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+<partial name="_MyPartialScript" />
+
+<script>
+    $(function () {
+        $('#Click_1').click(function () {
+
+            var itemId = $('#item-id').val();
+            var itemName = $('#item-name').val();
+            var itemQty = $('#item-qty').val();
+            var itemPrice = $('#item-price').val();
+            var itemCreatedDate = $('#item-createdDate').val();
+
+            var data = {
+                ItemId: itemId,
+                ItemName: itemName,
+                ItemQty: itemQty,
+                ItemPrice: itemPrice,
+                CreatedDate: itemCreatedDate
+            };
+            $.ajax({
+                type: 'PUT',
+                url: '/api/Items/Edit/' + itemId,
+                data: data,
+                success: function (response) {
+                    console.log(response);
+                    
+                        window.location.href = '/AddItem';
+                   
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+
+        });
+
+    });
+</script>

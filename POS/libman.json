@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/bootstrap/"
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/jquery/"
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/datatables/"
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "wwwroot/select2/",
+      "files": [
+        "js/select2.min.js",
+        "css/select2.min.css",
+        "js/select2.full.min.js"
+      ]
+    }
+  ]
+}

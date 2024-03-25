@@ -1,0 +1,38 @@
+﻿<div class="modal fade" id="DeleteSupplierModal" tabindex="-1" role="dialog" aria-labelledby="MyModalLabal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-gray-light border-bottom border-secondary border-2 py-2">
+                <h5 class="modal-title my-0" id="DeleteModelLabel"></h5>
+                <button id="optionCancle" type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form method="dialog" id="createoption" class="needs-validation" novalidate enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input hidden id="txtType" />
+                    <input hidden id="deletesupplier" />
+
+                    <h5 class="">Are You Sure Want TO Delete?</h5>
+
+                    <label class="form-label">Supplier ID:</label>
+                    <label id="lblsupplierId" class="form-label"></label><br />
+
+                    <label class="form-label">Supplier Name:</label>
+                    <label id="lblname" class="form-label"></label><br />
+
+                    <label class="form-label">Address:</label>
+                    <label id="lbladdress" class="form-label"></label><br />
+
+                    <label class="form-label">Phone:</label>
+                    <label id="lblphone" class="form-label"></label><br />
+
+                    <label class="form-label"> UpdteDate: </label>
+                    <label id="lblDate" class="form-label"></label><br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnDeleteConfirm" class="btn btn-danger">Delete</button>
+                    <button type="button" id="btnDeleteCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@page
+@model POS.Pages.AddItem.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Item</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Item.ItemId" class="control-label"></label>
+                <input asp-for="Item.ItemId" id="ItemID" class="form-control"  />
+                <span asp-validation-for="Item.ItemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.ItemName" class="control-label"></label>
+                <input asp-for="Item.ItemName" id="ItemName" class="form-control"  />
+                <span asp-validation-for="Item.ItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.ItemQty" class="control-label"></label>
+                <input asp-for="Item.ItemQty" type="number" id="ItemQty" class="form-control"  />
+                <span asp-validation-for="Item.ItemQty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.ItemPrice" class="control-label"></label>
+                <input asp-for="Item.ItemPrice" type="number" id="Itemprice" class="form-control"  />
+                <span asp-validation-for="Item.ItemPrice" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group m-2" >
+                <input type="submit" id="Click" value="Create" class="btn btn-primary" />
+                <a asp-page="Index" class="btn btn-secondary">Back to List</a>               
+            </div>
+        </form>
+    </div>
+</div>
+<partial name="_MyPartialScript" />
+
+<script>
+    $(function () {
+        $('#Click').click(function () {
+            var itemiD = $('#ItemID').val();
+            var itemName = $('#ItemName').val();
+            var itemQty = $('#ItemQty').val();
+            var itemPrice = $('#Itemprice').val();
+            var Data = {
+                ItemID: itemiD,
+                ItemName: itemName,
+                ItemQty: itemQty,
+                ItemPrice: itemPrice
+            };
+            console.log(Data);
+            $.ajax({
+                url: '/api/Items',
+                type: 'POST',
+                dataType: 'Json',
+                data: Data,
+                success: function () {
+
+                },
+                complete: function (Data) {
+
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        });
+    });
+</script>
+

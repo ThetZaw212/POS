@@ -1,0 +1,69 @@
+﻿@page
+@model POS.Pages.AddItem.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+@section styles {
+    <link href="~/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+}
+
+<h1>Item</h1>
+
+<p>
+    <a asp-page="Create"  class="btn btn-primary">Create New</a>
+</p>
+<table id="Mytable" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Item[0].ItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Item[0].ItemQty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Item[0].ItemPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Item[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Item[0].UpdatDate)
+            </th>
+            <th>
+                Action
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+</table>
+<partial name="_MyPartialScript" />
+<script src="~/datatables/js/jquery.datatables.min.js"></script>
+<script src="~/datatables/js/datatables.bootstrap4.min.js"></script>
+
+<script>
+    $(function () {
+        $('#Mytable').DataTable({
+            ajax: 'api/DataTable/Items',
+            columns: [
+
+                { data: 'itemName' },
+                { data: 'itemQty' },
+                { data: 'itemPrice' },
+                { data: 'createdDate' },
+                { data: 'updatDate' },
+                {
+                    data: null,
+                    render: function (row, type, data) {
+                        return '<a href="AddItem/Edit?id=' + row.itemId + '" class = "btn btn-sm btn-outline-info">Edit</a> | ' +
+                               '<a href="AddItem/Delete?id=' + row.itemId + '" class="btn btn-sm btn-outline-danger">Delete</a>';
+                        
+                    }
+                }
+            ]
+        });
+    });
+</script>
