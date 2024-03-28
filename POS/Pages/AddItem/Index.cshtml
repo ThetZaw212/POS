@@ -5,17 +5,20 @@
     ViewData["Title"] = "Index";
 }
 @section styles {
+
     <link href="~/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/datatables.net-select-bs4/select.bootstrap4.min.css" rel="stylesheet" />
 }
 
 <h1>Item</h1>
 
 <p>
-    <a asp-page="Create"  class="btn btn-primary">Create New</a>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
 </p>
 <table id="Mytable" class="table">
     <thead>
         <tr>
+            <th>#</th>
             <th>
                 @Html.DisplayNameFor(model => model.Item[0].ItemName)
             </th>
@@ -34,8 +37,6 @@
             <th>
                 Action
             </th>
-            
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,13 +44,18 @@
 <partial name="_MyPartialScript" />
 <script src="~/datatables/js/jquery.datatables.min.js"></script>
 <script src="~/datatables/js/datatables.bootstrap4.min.js"></script>
-
+<script src="~/datatables.net-select/datatables.select.min.js"></script>
+<script src="~/datatables.net-select-bs4/select.bootstrap4.min.js"></script>
 <script>
     $(function () {
         $('#Mytable').DataTable({
             ajax: 'api/DataTable/Items',
             columns: [
-
+                {
+                    defaultContent: null,
+                    data:null,
+                    render: function () { return "<span></span>" }
+                },
                 { data: 'itemName' },
                 { data: 'itemQty' },
                 { data: 'itemPrice' },
@@ -59,11 +65,20 @@
                     data: null,
                     render: function (row, type, data) {
                         return '<a href="AddItem/Edit?id=' + row.itemId + '" class = "btn btn-sm btn-outline-info">Edit</a> | ' +
-                               '<a href="AddItem/Delete?id=' + row.itemId + '" class="btn btn-sm btn-outline-danger">Delete</a>';
-                        
+                            '<a href="AddItem/Delete?id=' + row.itemId + '" class="btn btn-sm btn-outline-danger">Delete</a>';
+
                     }
                 }
-            ]
+            ],
+            // columnDefs: [{
+            //     orderable: false,
+            //     className: 'select-checkbox',
+            //     targets: 0
+            // }],
+            // select: {
+            //     style: 'os',
+            //     selector: 'td:first-child'
+            // },
         });
     });
 </script>

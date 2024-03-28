@@ -4,16 +4,19 @@
 }
 @section Styles {
     <link href="~/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/datatables.net-select-bs4/select.bootstrap4.min.css" rel="stylesheet" />
+  
 }
 
 <div class="card">
     <div class="card-body">
         <div class="col-xl-6 col-lg-6 mb-lg-2 mb-2">
-            <button id="btnCreate" type="button" class="btn btn-light"><i class="fa fa-plus-circle"></i>&nbsp;Create</button>
+            <button id="btnCreate" type="button" class="btn btn-light">Create</button>
         </div>
         <table id="Mytable" class="table table-responsive nowrap w-100" cellspacing="0">
             <thead class="text-left bg-light">
                 <tr>
+                    <th></th>
                     <th>
                         SupplierID
                     </th>
@@ -44,38 +47,73 @@
 <partial name="CreateSupplierModel" />
 <partial name="_DeleteSupplierModal" />
 
+@* https://cdn.datatables.net/select/2.0.0/css/select.bootstrap4.css *@
+
 <!--DataTable-->
 <script src="~/datatables/js/jquery.datatables.min.js"></script>
 <script src="~/datatables/js/datatables.bootstrap4.min.js"></script>
+<script src="~/datatables.net-select/datatables.select.min.js"></script>
+<script src="~/datatables.net-select-bs4/select.bootstrap4.min.js"></script>
+
 <!--validation-->
-@* <script src="/assets/libs/parsleyjs/parsley.min.js"></script>
-<script src="/assets/js/pages/form-validation.init.js"></script> *@
+
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 
 <script>
     var SupID;
     $(function () {
         var table = $('#Mytable').DataTable({
-            ajax: '/api/Master/Data', 
-            scrollY: '500px',        
-            //scrollX : true,
-           
-
+            ajax: '/api/Master/Data',
+            scrollY: '500px',
+            scrollX: true,
+            scrollCollapse: true,
             columns: [
+                {
+                    defaultContent: '',
+                    width: "2.5%",
+                    render: function () {
+                        return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+                    },
+                    ordering: false,
+                    orderable: false,
+                },
                 { data: 'supplierId' },
                 { data: 'supplierName' },
                 { data: 'address' },
                 { data: 'phone' },
-                { data: 'updateDate' },
+                {
+                    data: 'updateDate',
+                    render: function (data) {
+                        return data;
+                    }
+                },
                 {
                     data: null,
                     render: function (row, type, data) {
-                        return '<button type="button" class="btn btn-sm btn-outline-primary" id="' + row.supplierId + '" onclick="GetsupplierID(this)"><i class="fa fa-edit"></i>Edit</button> |   ' +
-                            '<button type="button" class="btn btn-sm btn-outline-danger" id="' + row.supplierId + '" onclick="GetSupplierDelete(this)"><i class="fa fa-trash"></i>Delete</button>';
-
+                        return '<button type="button" class="btn btn-sm btn-outline-primary" id="' + row.supplierId + '" onclick="GetsupplierID(this)">Edit</button> |   ' +
+                            '<button type="button" class="btn btn-sm btn-outline-danger" id="' + row.supplierId + '" onclick="GetSupplierDelete(this)"></i>Delete</button>';
                     }
                 }
-            ]
+                     
+            ],           
+            'select': {
+                'style': 'os',
+                selector: 'td:first-child'
+            },
+            
+        });
+
+        table.on('click', 'tr td:not(:nth-child(1))', function () {
+            console.log(table.row(this).data()["supplierId"]);
+        });
+        
+        table.on('select', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
+            if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
+        });
+
+        table.on('deselect', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
         });
 
         $('#btnCreate').click(function () {
@@ -83,6 +121,7 @@
             $('#txtType').val('Create');
             $('#OptionModelLabel').text('Create New Supplier');
             $('#CreateSupplier').modal('show');
+            $('#ErrorMessage').hide();
             ResetItem();
         });
 
@@ -91,32 +130,46 @@
             var SupplierName = $('#txtname').val();
             var Address = $('#txtAddress').val();
             var Phone = $('#txtphone').val();
-            
-            
             if ($('#txtType').val() == "Create") {
                 var data = {
                     SupplierId: '0',
                     SupplierName: SupplierName,
                     Address: Address,
-                    Phone: Phone,
+                    Phone: Phone
                 };
+
                 if (SupplierName !== '' && Address !== '' && Phone !== '') {
                     $.ajax({
-                        type: 'POST',
-                        url: '/api/Master/create',
-                        dataType: 'Json',
-                        data: data,
-                        success: function (data) {
-                            $('#CreateSupplier').modal('hide');
-                            ResetItem();
-                            table.ajax.reload();
+                        type: 'GET',
+                        url: '/api/Master/supplier/phone',
+                        data: { Phone: Phone },
+                        success: function (response) {
+
+                            if (response.exists) {
+                                $('#ErrorMessage').fadeIn();
+                                $('#txtphone').focus();
+                            }
+                            else {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/api/Master/create',
+                                    dataType: 'Json',
+                                    data: data,
+                                    success: function (data) {
+                                        $('#CreateSupplier').modal('hide');
+                                        ResetItem();
+                                        table.ajax.reload();
+                                    },
+                                    complete: function (data) {
+
+                                    },
+                                    error: function () {
+
+                                    }
+                                });
+                            }
                         },
-                        complete: function (data) {
-                            table.ajax.reload();
-                        },
-                        error: function () {
-                            alert("Error");
-                        }
+
                     });
                 }
                 else {
@@ -124,37 +177,71 @@
                 }
             }
             else {
+                var data = {
+                    SupplierId: SupID,
+                    SupplierName: SupplierName,
+                    Address: Address,
+                    Phone: Phone,
+                };
                 if (SupplierName !== '' && Address !== '' && Phone !== '') {
-                    var data = {
-                        SupplierId: SupID,
-                        SupplierName: SupplierName,
-                        Address: Address,
-                        Phone: Phone,
-                    };
-                    $('#CreateSupplier').modal('hide');
                     $.ajax({
-                        type: 'PUT',
-                        url: '/api/Master/supplier/edit',
-                        dataType: 'json',
-                        data: data,
-                        success: function (data) {
-                            $('#CreateSupplier').modal('hide');
-                            ResetItem();
-                            table.ajax.reload();
-                        },
-                        error: function () {
+                        type: 'GET',
+                        url: '/api/Master/supplier/phone',
+                        data: { Phone: Phone },
+                        success: function (response) {
+                            if (response.exists) {
+                                $('#ErrorMessage').fadeIn();
 
-                        },
-                        complete: function (data) {
-                            table.ajax.reload();
+                                $('#txtphone').focus();
+                            }
+                            else {
+                                $.ajax({
+                                    type: 'PUT',
+                                    url: '/api/Master/supplier/edit',
+                                    dataType: 'json',
+                                    data: data,
+                                    success: function (data) {
+                                        $('#CreateSupplier').modal('hide');
+                                        ResetItem();
+                                        table.ajax.reload();
+                                    },
+                                    error: function () {
+
+                                    },
+                                    complete: function (data) {
+                                        table.ajax.reload();
+                                    }
+                                });
+                            }
                         }
                     });
                 }
-                else{
+                else {
                     $('#createoption').addClass('was-validated');
                 }
             }
-           
+        });
+
+        $('#txtphone').change(function () {
+            var phone = $(this).val();
+            var errorMessage = $('#ErrorMessage');
+            errorMessage.hide();
+            $.ajax({
+                type: 'GET',
+                url: '/api/Master/supplier/phone',
+                dataType: 'json',
+                data: { Phone: phone },
+                success: function (response) {
+                    if (response.exists) {
+                        errorMessage.fadeIn();
+                    } else {
+                        errorMessage.hide();
+                    }
+                },
+                error: function () {
+
+                }
+            });
         });
 
         $('#btnDeleteConfirm').click(function () {
@@ -164,15 +251,15 @@
             $.ajax({
                 url: '/api/Master/supplier/delete?supplierID=' + id,
                 type: 'DELETE',
-                dataType:'Json',
-                success: function (data) { 
+                dataType: 'Json',
+                success: function (data) {
                     $('#DeleteSupplierModal').modal('hide');
                     table.ajax.reload();
                 },
-                error: function(data){
-                
+                error: function (data) {
+
                 },
-                complete: function (data) { 
+                complete: function (data) {
                     table.ajax.reload();
                 }
             });
@@ -185,10 +272,21 @@
 
         $('#btnCancle').click(function () {
             $('#CreateSupplier').modal('hide');
+
             ResetItem();
             table.ajax.reload();
         });
-               
+
+        $('#DeleteoptionCancle').click(function () {
+            $('#DeleteSupplierModal').modal('hide');
+            table.ajax.reload();
+        });
+
+        $('#btnDeleteCancel').click(function () {
+            $('#DeleteSupplierModal').modal('hide');
+            ResetItem();
+            table.ajax.reload();
+        });
     });
 
     function GetsupplierID(e) {
@@ -198,7 +296,8 @@
         $('#txtType').val('Edit');
         $('#OptionModelLabel').text('Edit Supplier');
         $('#CreateSupplier').modal('show');
-        var url = '/api/Master/supplier/byid?Supplierid=' + $(e).attr('id');
+        $('#ErrorMessage').hide();
+        var url = '/api/Master/supplier/by-id?Supplierid=' + $(e).attr('id');
 
         $.getJSON(url, function (data) {
             var supplier = data['data'];
@@ -214,7 +313,7 @@
         $('#txtType').val('Delete');
         $('#DeleteModelLabel').text('Delete Supplier');
 
-        var url = '/api/Master/supplier/byid?Supplierid=' + $(e).attr('id');
+        var url = '/api/Master/supplier/by-id?Supplierid=' + $(e).attr('id');
 
         $.getJSON(url, function (data) {
             var supplier = data["data"];

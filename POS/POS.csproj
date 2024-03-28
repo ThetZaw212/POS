@@ -25,6 +25,7 @@
     <Folder Include="Areas\Master\Data\" />
     <Folder Include="Areas\Master\Models\" />
     <Folder Include="Areas\Master\Views\" />
+    <Folder Include="wwwroot\datatables-helper\" />
   </ItemGroup>
 
 </Project>

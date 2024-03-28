@@ -22,6 +22,23 @@
         "css/select2.min.css",
         "js/select2.full.min.js"
       ]
+    },
+    {
+      "library": "datatables.net@2.1.1",
+      "destination": "wwwroot/datatables.net/"
+    },
+    {
+      "library": "datatables.net-select@2.0.0",
+      "destination": "wwwroot/datatables.net-select/"
+    },
+    {
+      "library": "datatables.net-fixedcolumns@5.0.0",
+      "destination": "wwwroot/datatables.net-fixedcolumns/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "datatables.net-bs4@3.2.2",
+      "destination": "wwwroot/datatables.net-bs4/"
     }
   ]
 }

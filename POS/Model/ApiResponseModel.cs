@@ -2,10 +2,12 @@
 {
     public class ApiResponseModel
     {
-        public int StatusCode { get; set; }
-        public bool Success { get; set; } = true;
+        public required int StatusCode { get; set; }
+        public required bool Success { get; set; } = false;
 
-        public required dynamic Data { get; set; }
-        public required dynamic Meassage { get; set; }
+        public dynamic? Data { get; set; }
+        public dynamic? Meassage { get; set; }
+
+        public bool? exists {  get; set; }
     }
 }

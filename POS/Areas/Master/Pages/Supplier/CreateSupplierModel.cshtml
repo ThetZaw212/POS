@@ -1,7 +1,7 @@
 ﻿<div class="modal fade" id="CreateSupplier" tabindex="-1" role="dialog" aria-labelledby="MyModalLabal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0">
-            <div class="modal-header bg-gray-light border-bottom border-secondary border-2 py-2">
+            <div class="modal-header bg-gray-light border-bottom border-primary border-2 py-2">
                 <h5 class="modal-title my-0" id="OptionModelLabel"></h5>
                 <button id="optionCancle" type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                 </button>
@@ -10,8 +10,15 @@
                 <form id="createoption" class="needs-validation" method="dialog" novalidate>
                     <input hidden id="txtType" />
                     <input hidden id="txtSupplierId" />
+                    <div id="ErrorMessage" class="row">
+                        <div class="col-12">
+                            <div class="alert alert-danger">
+                                <i class="bx bx-info"></i><span>Phone number is Already Exist.</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-sm6 mb3">
+                        <div class="col-sm-12 mb-3">
                             <label class="form-label">SupplierName<b class="text-danger">*</b></label>
                             <input type="text" id="txtname" class="form-control" name="txtname" placeholder="Enter Name." required />
                             <div class="valid-feedback">
@@ -20,25 +27,26 @@
                             <div class="invalid-feedback">
                                 Please Type SupplierName.
                             </div>
-                            <div class="col-sm6 mb3">
-                                <label class="form-label">Phone-Number<b class="text-danger">*</b></label>
-                                <input type="text" id="txtphone" name="txtPhone" class="form-control" placeholder="Enter Phone-Number." required />
-                                <div class="valid-feedback">
-                                    LookGood!
-                                </div>
-                                <div class="invalid-feedback">
-                                    Please Type Phone-number.
-                                </div>
+
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label class="form-label">Phone-Number<b class="text-danger">*</b></label>
+                            <input type="text" id="txtphone" name="txtPhone" class="form-control" placeholder="Enter Phone-Number." required />
+                            <div class="valid-feedback">
+                                LookGood!
                             </div>
-                            <div class="col-sm6 mb3">
-                                <label for="txtaddress" class="control-label">Addess<b class="text-danger">*</b></label>
-                                <textarea rows="5" id="txtAddress" name="address" class="form-control mb-2" placeholder="Enter Address." required></textarea>
-                                <div class="valid-feedback">
-                                    LookGood!
-                                </div>
-                                <div class="invalid-feedback">
-                                    Please Type Address.
-                                </div>
+                            <div class="invalid-feedback">
+                                Please Type Phone-number.
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label for="txtaddress" class="control-label">Addess<b class="text-danger">*</b></label>
+                            <textarea rows="5" id="txtAddress" name="address" class="form-control mb-2" placeholder="Enter Address." required></textarea>
+                            <div class="valid-feedback">
+                                LookGood!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please Type Address.
                             </div>
                         </div>
                     </div>

@@ -23,17 +23,18 @@ namespace POS.Controller
 
         [HttpPost]
 
-        public async Task<IActionResult> CreateItem([FromForm]Item model)
+        public async Task<IActionResult> CreateItem([FromForm] Item model)
         {
-           
+            string ကိုကိုခေါ်ရန် = ကိုကို();
+
             Item item = new()
-            { 
-                 ItemId = model.ItemId,
-                 ItemName = model.ItemName,
-                 ItemQty = model.ItemQty,
-                 ItemPrice = model.ItemPrice,
-                 CreatedDate = DateTime.Now,
-                 UpdatDate = DateTime.Now,
+            {
+                ItemId = model.ItemId,
+                ItemName = model.ItemName,
+                ItemQty = model.ItemQty,
+                ItemPrice = model.ItemPrice,
+                CreatedDate = DateTime.Now,
+                UpdatDate = DateTime.Now,
             };
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
@@ -46,19 +47,16 @@ namespace POS.Controller
             });
         }
 
-       
-
-
         #endregion
 
         [HttpPut("Edit/{id}")]
         public async Task<IActionResult> Edit(string? id, [FromForm] Item model)
         {
 
-            
+
             try
             {
-                Item item = await _context.Items.FirstOrDefaultAsync(i => i.ItemId == id);
+                Item? item = await _context.Items.FirstOrDefaultAsync(i => i.ItemId == id);
                 if (item != null)
                 {
                     item.ItemId = model.ItemId;
@@ -191,6 +189,13 @@ namespace POS.Controller
                 });
             }
         }
+
+        [NonAction]
+        public string ကိုကို()
+        {
+            return "ဗျာ";
+        }
+
     }
 
 }

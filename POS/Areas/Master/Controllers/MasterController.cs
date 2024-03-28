@@ -98,34 +98,41 @@ namespace POS.Areas.Master.Controllers
         {
             try
             {
-                Supplier suppliers = await _Context.Suppliers.FirstOrDefaultAsync(i=>i.SupplierId == model.SupplierId);
-                if(suppliers != null)
-                {
-                    suppliers.SupplierId = model.SupplierId;
-                    suppliers.SupplierName = model.SupplierName;
-                    suppliers.Address = model.Address;
-                    suppliers.Phone = model.Phone;
-                    suppliers.UpdateDate = DateTime.Now;
-                }
+
+                Supplier? suppliers = await _Context.Suppliers.FirstOrDefaultAsync(i => i.SupplierId == model.SupplierId);
+
+                if (suppliers == null)
+                    return BadRequest(
+                        new ApiResponseModel()
+                        {
+                            Success = false,
+                            StatusCode = StatusCodes.Status400BadRequest,
+                            Data = null,
+                            Meassage = "Supplier not foud"
+                        });
+
+                suppliers.SupplierId = model.SupplierId;
+                suppliers.SupplierName = model.SupplierName;
+                suppliers.Address = model.Address;
+                suppliers.Phone = model.Phone;
+                suppliers.UpdateDate = DateTime.Now;
                 _Context.Attach(suppliers).State = EntityState.Modified;
-                if (await _Context.SaveChangesAsync()>0)
-                {
-                    return Ok(new ApiResponseModel()
+
+                return (await _Context.SaveChangesAsync() > 0)
+                    ? Ok(new ApiResponseModel()
                     {
                         StatusCode = StatusCodes.Status200OK,
                         Success = true,
                         Data = new { message = "SuccessFully Edit" },
                         Meassage = "Request Success"
-                    }) ;
-                }
-                else
-                {
-                    return BadRequest( new ApiResponseModel() {                        
+                    })
+                    : BadRequest(new ApiResponseModel()
+                    {
                         Success = false,
-                        Data =null,
+                        StatusCode = StatusCodes.Status400BadRequest,
+                        Data = null,
                         Meassage = "Request Fail"
                     });
-                }
             }
             catch (Exception ex)
             {
@@ -139,7 +146,45 @@ namespace POS.Areas.Master.Controllers
 
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        [HttpGet("supplier/phone")]
 
+        public async Task<IActionResult> phonenumber(string phone)
+        {
+            try
+            {
+                Supplier? suppliers = await _Context.Suppliers.FirstOrDefaultAsync(p => p.Phone == phone);
+                
+                return (suppliers != null)
+                    ? Ok(new ApiResponseModel()
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Success = true,
+                        exists = true,
+                        Meassage = "Request Succcess"
+                    })
+                    : Ok(new ApiResponseModel()
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Success = true,
+                        exists = false
+                    });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseModel()
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError,
+                    Success = false,
+                    Data = new { message = "Fail" },
+                    Meassage = ex.Message
+                });
+            }
+        }
         /// <summary>
         /// Get SupplierID
         /// </summary>
@@ -148,11 +193,11 @@ namespace POS.Areas.Master.Controllers
         /// </remarks>
         /// <param name="Supplierid"></param>
         /// <returns></returns>
-        [HttpGet("supplier/byid")]
+        [HttpGet("supplier/by-id")]
 
         public async Task<IActionResult> GetSupplierID(int Supplierid)
         {
-            var list = await _Context.Suppliers.FirstOrDefaultAsync(i=>i.SupplierId == Supplierid);
+            var list = await _Context.Suppliers.FirstOrDefaultAsync(i => i.SupplierId == Supplierid);
             return Ok(new ApiResponseModel()
             {
                 StatusCode = StatusCodes.Status200OK,
@@ -165,11 +210,11 @@ namespace POS.Areas.Master.Controllers
         [HttpDelete("supplier/delete")]
         public async Task<IActionResult> DeleteSupplier(int supplierID)
         {
-            Supplier supplier = await _Context.Suppliers.FindAsync(supplierID);
+            Supplier? supplier = await _Context.Suppliers.FindAsync(supplierID);
 
             try
             {
-                if(supplier != null)
+                if (supplier != null)
                 {
                     _Context.Suppliers.Remove(supplier);
                     await _Context.SaveChangesAsync();
@@ -180,11 +225,12 @@ namespace POS.Areas.Master.Controllers
                         Success = true,
                         Data = supplier,
                         Meassage = "Request Success"
-                    }) ;
+                    });
                 }
                 else
                 {
-                    return BadRequest(new ApiResponseModel() { 
+                    return BadRequest(new ApiResponseModel()
+                    {
                         StatusCode = StatusCodes.Status400BadRequest,
                         Success = false,
                         Data = null,
@@ -196,10 +242,10 @@ namespace POS.Areas.Master.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseModel()
                 {
-                    StatusCode=StatusCodes.Status500InternalServerError,
+                    StatusCode = StatusCodes.Status500InternalServerError,
                     Success = false,
                     Data = null,
-                    Meassage =ex.Message
+                    Meassage = ex.Message
 
                 });
             }
