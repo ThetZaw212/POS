@@ -4,8 +4,8 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <partial name="_MyPartialScript" />
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section styles {
+    <link href="~/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/datatables.net-select-bs4/select.bootstrap4.min.css" rel="stylesheet" />
+}
+

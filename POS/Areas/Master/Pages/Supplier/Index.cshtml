@@ -1,17 +1,19 @@
 ﻿@page
 @model POS.Areas.Master.Pages.Supplier.IndexModel
 @{
+    
 }
 @section Styles {
-    <link href="~/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/datatables.net-bs4/datatables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/datatables.net-select-bs4/select.bootstrap4.min.css" rel="stylesheet" />
-  
+    <link href="~/datatables.net-buttons-bs4/buttons.bootstrap4.min.css" rel="stylesheet" />
 }
 
 <div class="card">
     <div class="card-body">
         <div class="col-xl-6 col-lg-6 mb-lg-2 mb-2">
             <button id="btnCreate" type="button" class="btn btn-light">Create</button>
+            <button id="btnExcel" type="button" class="btn btn-success">Excel</button>
         </div>
         <table id="Mytable" class="table table-responsive nowrap w-100" cellspacing="0">
             <thead class="text-left bg-light">
@@ -47,17 +49,31 @@
 <partial name="CreateSupplierModel" />
 <partial name="_DeleteSupplierModal" />
 
-@* https://cdn.datatables.net/select/2.0.0/css/select.bootstrap4.css *@
+<!--validation-->
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 
-<!--DataTable-->
-<script src="~/datatables/js/jquery.datatables.min.js"></script>
-<script src="~/datatables/js/datatables.bootstrap4.min.js"></script>
+<!-- Datatables -->
+<script src="~/datatables.net/datatables.min.js"></script>
+<script src="~/datatables.net-bs4/datatables.bootstrap4.min.js"></script>
 <script src="~/datatables.net-select/datatables.select.min.js"></script>
 <script src="~/datatables.net-select-bs4/select.bootstrap4.min.js"></script>
 
-<!--validation-->
+<!--Button-->
+<script src="~/datatables.net-buttons/js/datatables.buttons.min.js"></script>
+<script src="~/datatables.net-buttons-bs4/buttons.bootstrap4.min.js"></script>
+<script src="~/jszip/jszip.min.js"></script>
+<script src="~/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/datatables.net-buttons/js/buttons.colvis.min.js"></script>
 
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+@* <script src="~/datatables.net-buttons/js/datatables.buttons.min.js"></script>
+<script src="~/datatables.net-buttons-bs4/buttons.bootstrap4.min.js"></script>
+<script src="~/jszip/jszip.js"></script>
+<script src="~/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/datatables.net-buttons/js/buttons.colvis.min.js"></script> *@
+
+
 
 <script>
     var SupID;
@@ -67,6 +83,14 @@
             scrollY: '500px',
             scrollX: true,
             scrollCollapse: true,
+            dom: '<"top"f>rt<"bottom"lip><"clear">',
+            buttons: [{
+                extend: "excelHtml5",
+                className: "btn-success",
+                exportOptions: {
+                    orthogonal: "myExport", columns: [ 2, 3, 4,5 ]
+                }
+            }],
             columns: [
                 {
                     defaultContent: '',
@@ -90,23 +114,23 @@
                 {
                     data: null,
                     render: function (row, type, data) {
-                        return '<button type="button" class="btn btn-sm btn-outline-primary" id="' + row.supplierId + '" onclick="GetsupplierID(this)">Edit</button> |   ' +
+                        return '<button type="button" class="btn btn-sm btn-outline-warning" id="' + row.supplierId + '" onclick="GetsupplierID(this)">Edit</button> |   ' +
                             '<button type="button" class="btn btn-sm btn-outline-danger" id="' + row.supplierId + '" onclick="GetSupplierDelete(this)"></i>Delete</button>';
                     }
                 }
-                     
-            ],           
+
+            ],
             'select': {
                 'style': 'os',
-                selector: 'td:first-child'
+
             },
-            
+
         });
 
         table.on('click', 'tr td:not(:nth-child(1))', function () {
             console.log(table.row(this).data()["supplierId"]);
         });
-        
+
         table.on('select', function (e, dt, type, indexes) {
             $('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
             if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
@@ -277,6 +301,10 @@
             table.ajax.reload();
         });
 
+        $('#btnExcel').click(function () {
+            table.buttons('.buttons-excel').trigger();            
+        });
+
         $('#DeleteoptionCancle').click(function () {
             $('#DeleteSupplierModal').modal('hide');
             table.ajax.reload();
@@ -334,4 +362,8 @@
         $('#txtphone').val('');
     }
 </script>
+@* <script type="module">
+    import { getHelloWorldAlert } from '../../js/my-script-ng.js';
 
+    getHelloWorldAlert();
+</script> *@

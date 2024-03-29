@@ -7,7 +7,7 @@
 @section styles {
 
     <link href="~/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
-    <link href="~/datatables.net-select-bs4/select.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/datatables.net-select-bs4/select.bootstrap4.min.css" rel="stylesheet" />   
 }
 
 <h1>Item</h1>
@@ -53,8 +53,12 @@
             columns: [
                 {
                     defaultContent: null,
-                    data:null,
-                    render: function () { return "<span></span>" }
+                    width: "2.5%",
+                    render: function () {
+                        return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+                    },
+                    ordering: false,
+                    orderable: false,
                 },
                 { data: 'itemName' },
                 { data: 'itemQty' },
@@ -70,15 +74,15 @@
                     }
                 }
             ],
-            // columnDefs: [{
-            //     orderable: false,
-            //     className: 'select-checkbox',
-            //     targets: 0
-            // }],
-            // select: {
-            //     style: 'os',
-            //     selector: 'td:first-child'
-            // },
+            columndefs: [{
+                orderable: false,
+                classname: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
         });
     });
 </script>
