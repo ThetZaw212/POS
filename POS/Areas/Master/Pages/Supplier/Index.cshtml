@@ -1,7 +1,10 @@
 ﻿@page
 @model POS.Areas.Master.Pages.Supplier.IndexModel
 @{
-    
+    ViewData["Title"] = "Supplier | Master";
+    ViewData["pageTitle"] = "POS";
+    ViewData["pTitle"] = "Master";
+    ViewData["pSubTitle"] = "Supplier";
 }
 @section Styles {
     <link href="~/datatables.net-bs4/datatables.bootstrap4.min.css" rel="stylesheet" />
@@ -52,26 +55,8 @@
 <!--validation-->
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 
-<!-- Datatables -->
-<script src="~/datatables.net/datatables.min.js"></script>
-<script src="~/datatables.net-bs4/datatables.bootstrap4.min.js"></script>
-<script src="~/datatables.net-select/datatables.select.min.js"></script>
-<script src="~/datatables.net-select-bs4/select.bootstrap4.min.js"></script>
-
-<!--Button-->
-<script src="~/datatables.net-buttons/js/datatables.buttons.min.js"></script>
-<script src="~/datatables.net-buttons-bs4/buttons.bootstrap4.min.js"></script>
-<script src="~/jszip/jszip.min.js"></script>
-<script src="~/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="~/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="~/datatables.net-buttons/js/buttons.colvis.min.js"></script>
-
-@* <script src="~/datatables.net-buttons/js/datatables.buttons.min.js"></script>
-<script src="~/datatables.net-buttons-bs4/buttons.bootstrap4.min.js"></script>
-<script src="~/jszip/jszip.js"></script>
-<script src="~/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="~/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="~/datatables.net-buttons/js/buttons.colvis.min.js"></script> *@
+<!--DataTable-->
+<partial name="_DataTableScript" />
 
 
 
@@ -83,10 +68,11 @@
             scrollY: '500px',
             scrollX: true,
             scrollCollapse: true,
-            dom: '<"top"f>rt<"bottom"lip><"clear">',
+            
             buttons: [{
                 extend: "excelHtml5",
                 className: "btn-success",
+                title: ('@ViewBag.pSubTitle' + ' @ViewBag.pTitle' + ' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
                 exportOptions: {
                     orthogonal: "myExport", columns: [ 2, 3, 4,5 ]
                 }
