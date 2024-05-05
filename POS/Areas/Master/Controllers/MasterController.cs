@@ -91,7 +91,11 @@ namespace POS.Areas.Master.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Supplier/edit
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("supplier/edit")]
 
         public async Task<IActionResult> EditSupplier([FromForm] Supplier model)
